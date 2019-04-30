@@ -1,13 +1,14 @@
 version: '3.5'
 services:
-  geth:
-    image: ethereum/client-go
-    container_name: ethereum-node
-    hostname: ethereum-node
+  geth-private:
+    build: geth
+    image: geth
+    container_name: geth-private
+    hostname: geth-private
     restart: always
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./geth:/root
+    command: --networkid 1234 --nodiscover --maxpeers=0 --datadir=/root/.ethereum --rpc --rpcaddr=0.0.0.0 --rpcport=8545 --rpccorsdomain='*' --rpcapi=admin,db,debug,eth,miner,net,personal,shh,txpool,web3 --ws --wsaddr=0.0.0.0 --wsport=8546 --wsorigins='*' --wsapi=admin,db,debug,eth,miner,net,personal,shh,txpool,web3
     ports:
-      - "8545:8545"
-      - "30303:30303"
-    command: ["ethereum/client-go", "--fast", "--cache=512"]
+      - 8545-8546:8545-8546
+      - 30303:30303
