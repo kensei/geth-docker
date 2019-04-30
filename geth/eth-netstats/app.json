@@ -1,0 +1,24 @@
+[
+  {
+    "name"              : "private-node",
+    "script"            : "app.js",
+    "log_date_format"   : "YYYY-MM-DD HH:mm Z",
+    "merge_logs"        : false,
+    "watch"             : false,
+    "max_restarts"      : 10,
+    "exec_interpreter"  : "node",
+    "exec_mode"         : "cluster_mode",
+    "env":
+    {
+      "NODE_ENV"        : "test",
+      "RPC_HOST"        : "127.0.0.1",
+      "RPC_PORT"        : "8545",
+      "LISTENING_PORT"  : "30303",
+      "INSTANCE_NAME"   : "geth-private",
+      "CONTACT_DETAILS" : "",
+      "WS_SERVER"       : "http://eth-netstats:53000",
+      "WS_SECRET"       : "secret",
+      "VERBOSITY"       : 2
+    }
+  }
+]

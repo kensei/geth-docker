@@ -2,13 +2,29 @@ version: '3.5'
 services:
   geth-private:
     build: geth
-    image: geth
     container_name: geth-private
     hostname: geth-private
     restart: always
     volumes:
-      - ./geth:/root
-    command: --networkid 1234 --nodiscover --maxpeers=0 --datadir=/root/.ethereum --rpc --rpcaddr=0.0.0.0 --rpcport=8545 --rpccorsdomain='*' --rpcapi=admin,db,debug,eth,miner,net,personal,shh,txpool,web3 --ws --wsaddr=0.0.0.0 --wsport=8546 --wsorigins='*' --wsapi=admin,db,debug,eth,miner,net,personal,shh,txpool,web3
+      - ./geth/ethereum-data:/root
+      - ./geth/.ethereum/genesis.json:/root/.ethereum/genesis.json
+      - ./geth/startup.sh:/root/startup.sh
+      - ./geth/eth-netstats/app.json:/eth-net-intelligence-api/app.json
+    entrypoint: /root/startup.sh
+    command: --identity "private test net" --networkid 1234 --nodiscover --maxpeers=0 --datadir=/root/.ethereum --rpc --rpcaddr=0.0.0.0 --rpcport=8545 --rpccorsdomain='*' --rpcvhosts='*' --rpcapi=admin,db,debug,eth,miner,net,personal,shh,txpool,web3 --ws --wsaddr=0.0.0.0 --wsport=8546 --wsorigins='*' --wsapi=admin,db,debug,eth,miner,net,personal,shh,txpool,web3
     ports:
       - 8545-8546:8545-8546
       - 30303:30303
+  eth-netstats:
+    build: geth/eth-netstats
+    container_name: eth-netstats
+    hostname: eth-netstats
+    environment:
+      WS_SECRET: 'secret'
+    restart: always
+    ports:
+      - 53000:53000
+    depends_on:
+      - geth-private
+    working_dir: /eth-netstats
+    command: npm start
