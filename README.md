@@ -31,6 +31,7 @@ eth.hashrate
 ```
 eth.blockNumber
 eth.getBlock(1)
+web3.fromWei(eth.getBalance(eth.accounts[0]), "ether")
 ```
 
 ## minning stop
